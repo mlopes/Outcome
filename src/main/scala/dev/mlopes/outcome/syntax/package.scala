@@ -7,4 +7,11 @@ package object syntax {
       case Some(e) => Failure(e)
     }
   }
+
+  implicit class EitherOps[E](either: Either[E, Unit]) {
+    def asOutcome: Outcome[E] = either match {
+      case Left(f) => Failure(f)
+      case Right(_) => Success
+    }
+  }
 }

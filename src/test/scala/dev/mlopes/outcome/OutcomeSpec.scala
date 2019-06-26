@@ -38,5 +38,24 @@ class OutcomeSpec extends WordSpec with Matchers with Inside {
       none.asOutcome shouldBe a [Outcome[_]]
       none.asOutcome should matchPattern { case Success => }
     }
+
+    "be isomorphic to Either[E, Unit]" in {
+      val success: Outcome[Int] = Success
+      success.asEither shouldBe a [Either[_, Unit]]
+      success.asEither should matchPattern { case Right(()) => }
+
+      val failed: Outcome[String] = Failure("abc")
+      failed.asEither shouldBe a [Either[_, Unit]]
+      failed.asEither should matchPattern { case Left(_) => }
+      inside(failed.asEither) { case Left(e) => e shouldBe a [String] }
+
+      val left: Either[Boolean, Unit] = Left(true)
+      left.asOutcome shouldBe a [Outcome[_]]
+      left.asOutcome should matchPattern { case Failure(true) => }
+
+      val right: Either[Int, Unit] = Right(())
+      right.asOutcome shouldBe a [Outcome[_]]
+      right.asOutcome should matchPattern { case Success => }
+    }
   }
 }
