@@ -5,12 +5,22 @@ ThisBuild / version          := "0.1.0-SNAPSHOT"
 ThisBuild / organization     := "dev.mlopes"
 ThisBuild / organizationName := "mlopes"
 
-lazy val root = (project in file("."))
+lazy val outcome = project
+  .in(file("."))
+  .aggregate(core)
+  .settings(name := "Outcome Root")
+
+lazy val core = project
+  .in(file("modules/core"))
+  .settings(moduleName := "outcome", name := "Outcome", description := "Expressive type to represent outcomes")
   .settings(
-    name := "Outcome",
-    scalacOptions := appScalacOptions,
     libraryDependencies += scalaTest % Test,
-    compile in Compile := (compile in Compile).dependsOn(dependencyUpdates).value,
+    defaultConfig
+  )
+
+lazy val defaultConfig = Seq(
+  scalacOptions := appScalacOptions,
+  compile in Compile := (compile in Compile).dependsOn(dependencyUpdates).value
   )
 
 lazy val appScalacOptions = Seq(
