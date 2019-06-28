@@ -7,13 +7,23 @@ ThisBuild / organizationName := "mlopes"
 
 lazy val outcome = project
   .in(file("."))
-  .aggregate(core)
+  .aggregate(core, cats)
   .settings(name := "Outcome Root")
 
 lazy val core = project
   .in(file("modules/core"))
   .settings(moduleName := "outcome", name := "Outcome", description := "Expressive type to represent outcomes")
   .settings(
+    libraryDependencies += scalaTest % Test,
+    defaultConfig
+  )
+
+lazy val cats = project
+  .in(file("modules/cats"))
+  .dependsOn(core)
+  .settings(moduleName := "outcome-cats", name := "Outcome Cats Instances", description := "Cats type class instances for outcomes")
+  .settings(
+    libraryDependencies ++= catsDependencies,
     libraryDependencies += scalaTest % Test,
     defaultConfig
   )
